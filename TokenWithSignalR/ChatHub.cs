@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using TokenWithSignalR;
 
-[Authorize]
+//[Authorize]
 public class ChatHub : Hub
 {
     public async Task SendMessage(string user, string message)
@@ -19,5 +22,10 @@ public class ChatHub : Hub
     {
         Console.WriteLine($"User disconnected: {Context.UserIdentifier}");
         return base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task UpdateMap(ObservableCollection<AccountInforModel> list)
+    {
+        await Clients.Others.SendAsync("ReceiveNewMap", list);
     }
 }
